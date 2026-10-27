@@ -1,0 +1,7 @@
+# No outbound write at all: the report stays in reports/ and is read locally or in an interactive session.
+name: file-only
+title: Report file only
+description: No message is sent; the report is the file in reports/, checked by the runner after the session.
+server: null
+reactions: false
+place: the report file in reports/

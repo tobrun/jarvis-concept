@@ -1,0 +1,39 @@
+name: gmail
+title: Gmail
+description: Full mail threads with headers, labels, starred, and unread state.
+order: 40
+id: "gmail:<thread>"
+match: parts
+capture: mcp
+servers:
+  gmail:
+    candidates: [claude_ai_Gmail]
+    tools: [get_thread, get_message, search_threads, list_labels]
+    forbidden:
+      - send_message
+      - reply
+      - forward
+      - create_draft
+      - update_draft
+      - delete_draft
+      - get_draft
+      - list_drafts
+      - create_label
+      - update_label
+      - delete_label
+      - label_message
+      - label_thread
+      - unlabel_message
+      - unlabel_thread
+      - update_message_labels
+      - trash_message
+      - trash_thread
+      - untrash_message
+      - untrash_thread
+      - mark_message_spam
+      - mark_thread_spam
+      - unmark_message_spam
+      - unmark_thread_spam
+      - apply_sensitive_message_label
+      - apply_sensitive_thread_label
+params: {}

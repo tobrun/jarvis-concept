@@ -1,0 +1,21 @@
+name: jira
+title: Jira
+description: Issues on the boards the principal owns or watches, with their changelog.
+order: 20
+id: "jira:<issue>"
+match: parts
+capture: mcp
+servers:
+  atlassian:
+    candidates: [claude_ai_Atlassian, claude_ai_Atlassian_Rovo]
+    tools: [getJiraIssue, searchJiraIssuesUsingJql, getJiraIssueRemoteIssueLinks, getVisibleJiraProjects, lookupJiraAccountId, getTransitionsForJiraIssue, getIssueLinkTypes]
+    forbidden: [createJiraIssue, editJiraIssue, transitionJiraIssue, addCommentToJiraIssue, addWorklogToJiraIssue, createIssueLink]
+staleness:
+  jira_in_progress:
+    days: 5
+    description: a Jira issue in progress with no changelog entry
+params:
+  projects:
+    type: list
+    description: Jira project keys whose whole board matters, not only issues assigned to the principal.
+    example: [PLAT]

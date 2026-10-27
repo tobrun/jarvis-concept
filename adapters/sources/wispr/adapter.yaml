@@ -1,0 +1,30 @@
+name: wispr
+title: Wispr Flow
+description: Recorded meetings with transcripts, and the principal's scratchpad notes. Read-only.
+order: 80
+id: "wispr:<item>"
+match: parts
+capture: mcp
+servers:
+  wispr:
+    candidates: [wispr]
+    tools:
+      - search_meetings
+      - get_meeting
+      - get_meeting_by_calendar_id
+      - list_meeting_series
+      - get_meeting_participants_enriched
+      - get_participant_contacts
+      - list_folders
+      - list_folder_meetings
+      - resolve_share_link
+      - search_scratchpad_notes
+      - get_scratchpad_note
+      - list_upcoming_meetings
+      - get_upcoming_meeting
+      - get_calendar_event
+      - search_calendar_events
+      - resolve_calendar_link
+      - get_account_info
+    forbidden: []
+params: {}

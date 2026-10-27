@@ -1,0 +1,6 @@
+#!/bin/sh
+# Eval gate (D-eval-gate): installed by `git config core.hooksPath scripts/hooks`. Logic lives in scripts/eval_gate.py.
+root="$(git rev-parse --show-toplevel)" || exit 1
+python="$root/.venv/bin/python"
+[ -x "$python" ] || python=python3
+exec "$python" "$root/scripts/eval_gate.py" commit-msg "$@"

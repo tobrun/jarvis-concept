@@ -1,0 +1,19 @@
+# GitHub is read through a GET-only wrapper, never through `gh` or an MCP server with write tools.
+name: github
+title: GitHub
+description: Pull requests where the principal is author or reviewer, plus watched repos, through a GET-only reader.
+order: 50
+id: "github:<repo>#<number>"
+match: github
+capture: bash
+bash: [uv, run, scripts/gh_read.py]
+requires: [gh]
+staleness:
+  pr_review:
+    days: 3
+    description: a pull request awaiting review with no activity
+params:
+  repos:
+    type: list
+    description: Repositories to watch as owner/name, beyond the pull requests the principal is part of.
+    example: [example-org/service]

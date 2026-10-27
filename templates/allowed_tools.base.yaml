@@ -1,0 +1,182 @@
+# Base of config/allowed_tools.yaml. scripts/bootstrap.py render fills groups.sources, groups.post,
+# constrained, and the source readers' Bash prefixes from the adapters the profile enables.
+
+protected:
+  - ".git/**"
+  - ".claude/**"
+  - ".venv/**"
+  - "scripts/**"
+  - "config/**"
+  - "adapters/delivery/**"
+  - "adapters/sources/**"
+  - "adapters/*"
+  - "templates/**"
+  - "profile/**"
+  - "pyproject.toml"
+  - "uv.lock"
+  - "CLAUDE.md"
+  - "JARVIS.md"
+  - "OWNER.md"
+  - ".mcp.json"
+  - "raw/**"
+  - "notes/**"
+  - "eval/golden/**"
+  - "eval/baseline.json"
+  - "eval/last.json"
+  - "curation/labels/**"
+  - "state/*.jsonl"
+  - "state/candidates/**"
+  - "state/suppressed/**"
+  - "state/guard.sha256"
+  - "state/runs.json"
+  - "state/coverage.json"
+  - "state/alerts.json"
+
+# Modes that replace `protected` with their own list.
+protected_by_mode:
+  # Still protected in dev: the evidence and the append-only ledgers.
+  dev:
+    - "raw/**"
+    - "eval/golden/**"
+    - "curation/labels/**"
+    - "state/*.jsonl"
+  # bootstrap: rendered as `protected` minus the profile, OWNER.md, and new source adapters.
+
+groups:
+  local: [Read, Glob, Grep, LS, TodoWrite, ToolSearch, Task, Agent, Skill, AskUserQuestion]
+  edit: [Write, Edit, MultiEdit, NotebookEdit]
+  post: []
+  sources: []
+
+modes:
+  morning: &report
+    tools: [local, edit, sources, post, Bash]
+    write:
+      - "memory/daily/**"
+      - "memory/loops/**"
+      - "drafts/**"
+      - "reports/**"
+      - "curation/queue/**"
+      - "curation/misses.md"
+      - "state/ooo.json"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/append.py]
+      - [uv, run, scripts/loops.py]
+      - [uv, run, scripts/source_coverage.py]
+      - [uv, run, scripts/dedup.py]
+      - [uv, run, scripts/bizdays.py]
+      - [uv, run, scripts/report_check.py]
+      - [uv, run, scripts/raw.py, resolve]
+      - [uv, run, scripts/raw.py, tombstone]
+      - [uv, run, scripts/index.py, search]
+  midday: *report
+  eod:
+    tools: [local, edit, sources, post, Bash]
+    write:
+      - "memory/daily/**"
+      - "memory/loops/**"
+      - "memory/INFERRED_GOALS.md"
+      - "drafts/**"
+      - "reports/**"
+      - "curation/queue/**"
+      - "curation/misses.md"
+      - "state/ooo.json"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/append.py]
+      - [uv, run, scripts/loops.py]
+      - [uv, run, scripts/source_coverage.py]
+      - [uv, run, scripts/dedup.py]
+      - [uv, run, scripts/bizdays.py]
+      - [uv, run, scripts/report_check.py]
+      - [uv, run, scripts/raw.py, resolve]
+      - [uv, run, scripts/raw.py, tombstone]
+      - [uv, run, scripts/index.py, search]
+      - [uv, run, scripts/metrics.py]
+  consolidate:
+    tools: [local, edit, sources, Bash]
+    write:
+      - "memory/MEMORY.md"
+      - "memory/INFERRED_GOALS.md"
+      - "memory/.inferred_goals.last_written"
+      - "memory/daily/**"
+      - "memory/claims/**"
+      - "memory/bank/**"
+      - "memory/loops/**"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/append.py, claim_checks]
+      - [uv, run, scripts/claims.py]
+      - [uv, run, scripts/loops.py]
+      - [uv, run, scripts/bizdays.py]
+      - [uv, run, scripts/raw.py, resolve]
+      - [uv, run, scripts/index.py]
+  dream:
+    tools: [local, edit, Bash]
+    write:
+      - "memory/dreams/**"
+      - "memory/ALIGNMENT_SYNTHESIS.md"
+      - "memory/repair_threads.yaml"
+      - "memory/progression.yaml"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/raw.py, resolve]
+      - [uv, run, scripts/index.py, search]
+  interactive: &interactive
+    tools: [local, edit, sources, Bash]
+    write:
+      - "memory/**"
+      - "drafts/**"
+      - "curation/misses.md"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/append.py]
+      - [uv, run, scripts/loops.py]
+      - [uv, run, scripts/source_coverage.py, check]
+      - [uv, run, scripts/bizdays.py]
+      - [uv, run, scripts/claims.py]
+      - [uv, run, scripts/metrics.py]
+      - [uv, run, scripts/report_check.py]
+      - [uv, run, scripts/raw.py]
+      - [uv, run, scripts/index.py]
+  curate: *interactive
+  # Replay and eval run in a temp copy of the repo with no network: no source, post, reader, or index tool.
+  replay: &offline
+    tools: [local, edit, Bash]
+    write:
+      - "memory/**"
+      - "drafts/**"
+      - "reports/**"
+      - "curation/queue/**"
+      - "state/ooo.json"
+      - "state/tmp/**"
+      - "eval/replays/**"
+    bash:
+      - [uv, run, scripts/append.py]
+      - [uv, run, scripts/loops.py]
+      - [uv, run, scripts/source_coverage.py]
+      - [uv, run, scripts/dedup.py]
+      - [uv, run, scripts/bizdays.py]
+      - [uv, run, scripts/claims.py]
+      - [uv, run, scripts/report_check.py]
+      - [uv, run, scripts/raw.py, resolve]
+  eval: *offline
+  # The bootstrap interview (scripts/jarvis bootstrap): writes the profile, OWNER.md, and new source
+  # adapters, renders, and checks. No source or delivery tool; pinning the guard stays with the human.
+  bootstrap:
+    tools: [local, edit, Bash]
+    write:
+      - "profile/**"
+      - "OWNER.md"
+      - "adapters/sources/**"
+      - "state/tmp/**"
+    bash:
+      - [uv, run, scripts/bootstrap.py]
+      - [uv, run, scripts/doctor.py]
+  # Human development sessions only (JARVIS_MODE=dev from a shell). Local tools and Bash run freely;
+  # every outbound MCP tool stays denied, and the evidence stays append-only.
+  dev:
+    tools: [local, edit, sources, Bash]
+    write: ["**"]
+    bash: any

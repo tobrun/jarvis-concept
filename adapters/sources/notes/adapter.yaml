@@ -1,0 +1,10 @@
+# The principal's own notes in notes/, read with the Read tool. Never writable by Jarvis.
+name: notes
+title: Local notes
+description: Markdown notes the principal keeps in notes/ in this repo.
+order: 90
+id: "notes:<path>"
+match: parts
+capture: read
+folder: notes
+params: {}

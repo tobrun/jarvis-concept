@@ -1,0 +1,8 @@
+#!/bin/sh
+# Start an interactive Jarvis session: `scripts/jarvis` (interactive), `scripts/jarvis curate`,
+# `scripts/jarvis bootstrap` for the setup interview, or `scripts/jarvis dev` to work on the harness itself.
+# Every Claude Code session in this repo needs a mode: the guard denies every tool call when JARVIS_MODE is unset.
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+JARVIS_ROOT="$ROOT"
+export JARVIS_ROOT
+exec "$ROOT/.venv/bin/python" "$ROOT/scripts/run.py" open "${1:-interactive}"

@@ -1,0 +1,29 @@
+# Template for a new source adapter. Copy this directory to adapters/sources/<name>/, fill it in, then run
+# `uv run scripts/bootstrap.py validate`. docs/writing-an-adapter.md explains every field.
+name: example
+title: Example
+description: One line on what this source holds and why it matters.
+# Reading order in the prompt; lower reads first. Calendar 10, tickets 20, chat 30, mail 40, code 50.
+order: 100
+# Raw source name (lowercase, digits, underscore). Defaults to `name` when that is already valid.
+# source: example
+# The citable id. `<part>` placeholders; every part must appear verbatim in the captured payload or input.
+id: "example:<item>"
+# parts: every id part is a whole token in the line. github: the GitHub issue and pull matcher.
+match: parts
+# mcp: captured from MCP tools below. bash: from a Bash argv prefix (`bash:`). read: from Read in `folder:`.
+capture: mcp
+servers:
+  # A role name, the server names it may load under (the part between `mcp__` and the next `__`),
+  # the read tools Jarvis may call, and the write tools it must never call.
+  example:
+    candidates: [example_server]
+    tools: [list_items, get_item]
+    forbidden: [create_item, update_item, delete_item]
+# Optional: loop kinds this source adds, counted in calendar days without movement.
+# staleness:
+#   example_idle:
+#     days: 5
+#     description: an item with no activity
+# Owner parameters, filled in the profile and substituted into prompt.md as {{name}}.
+params: {}

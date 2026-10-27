@@ -1,0 +1,79 @@
+# Example profile for a fictional principal. Copy to profile/jarvis.profile.yaml, or let the bootstrap
+# interview (scripts/jarvis bootstrap) write yours. docs/profile.md documents every key.
+
+assistant:
+  name: Jarvis
+
+principal:
+  name: Ada Example
+  short_name: Ada
+  pronouns: they            # they | he | she; used for "their" and "them" in the prompt
+  emails: [ada@example.com]
+  role: leads the Platform team at Example Corp
+  scope: work               # work | personal | mixed
+  focus: the Q3 platform migration and hiring for the team
+  goal_documents: quarterly plans and team charters on the PLAT Confluence space
+
+timezone: Europe/Amsterdam
+working_hours:
+  days: [mon, tue, wed, thu, fri]
+  start: "08:00"
+  end: "18:00"
+
+holidays:
+  country: NL               # public holidays from the `holidays` package; omit for none
+  subdivision: null
+  extra:
+    - 2026-12-24 day off
+
+schedule:
+  morning: "08:00"
+  midday: "13:00"
+  eod: "18:00"
+  dream: "02:00"
+
+# Enabled sources, by adapter name (adapters/sources/<name>/). `servers` maps a server role to the MCP
+# server names it loads under; omitted, every known candidate is allowed. `params` fill the adapter's prompt.
+sources:
+  google-calendar: {}
+  jira:
+    params:
+      projects: [PLAT]
+  slack:
+    servers:
+      slack: [claude_ai_Slack, plugin_enterprise-search_slack]
+  gmail: {}
+  github:
+    params:
+      repos: [example-org/platform]
+  confluence:
+    params:
+      spaces: [PLAT]
+  notes: {}
+
+delivery:
+  adapter: slack-self-dm    # slack-self-dm | gmail-to-self | file-only
+  target: U0EXAMPLE01
+
+runtime:
+  claude_bin: ~/.local/bin/claude
+  claude_config_dir: null   # CLAUDE_CONFIG_DIR for headless runs; null uses ~/.claude
+  canary: true
+
+scheduler:
+  backend: launchd          # launchd | systemd | cron | none
+  label: com.example.jarvis
+
+index:
+  backend: sqlite           # sqlite | postgres
+
+files:
+  opinions: null            # e.g. ~/OPINIONS.md: how you judge, read every run
+  voice: null               # e.g. ~/VOICE.md: how you write, the floor for drafts
+
+curation: curate            # curate for the first two weeks, then auto
+
+decisions:
+  - "Scope: work only."
+  - "Delivery: Slack self-DM, hard-scoped to that one conversation."
+  - "Hard nos: no outbound communication as Ada, no calendar changes."

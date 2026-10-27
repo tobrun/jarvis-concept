@@ -1,0 +1,40 @@
+# Slack through a Slack MCP connector. See docs/writing-an-adapter.md for every field.
+name: slack
+title: Slack
+description: Channels, DMs, and threads the principal is a member of, with reactions, edits, and replies.
+order: 30
+id: "slack:<channel>:<ts>"
+match: parts
+capture: mcp
+servers:
+  slack:
+    candidates: [claude_ai_Slack, plugin_enterprise-search_slack]
+    tools:
+      - slack_read_channel
+      - slack_read_thread
+      - slack_search_public
+      - slack_search_public_and_private
+      - slack_search_channels
+      - slack_search_users
+      - slack_read_user_profile
+      - slack_get_reactions
+      - slack_list_user_channels
+      - slack_list_channel_members
+      - slack_read_canvas
+      - slack_read_file
+      - slack_read_list
+    forbidden:
+      - slack_send_message
+      - slack_send_message_draft
+      - slack_schedule_message
+      - slack_add_reaction
+      - slack_create_canvas
+      - slack_update_canvas
+      - slack_create_conversation
+      - slack_create_list
+      - slack_add_list_record
+      - slack_update_list
+      - slack_update_list_record
+      - slack_get_file_upload_url
+      - slack_complete_file_upload
+params: {}

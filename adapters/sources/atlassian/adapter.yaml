@@ -1,0 +1,13 @@
+name: atlassian
+title: Atlassian search
+description: Atlassian's cross-product search, fetch, and teamwork graph. Enable alongside jira or confluence.
+order: 65
+id: "atlassian:<ari>"
+match: parts
+capture: mcp
+servers:
+  atlassian:
+    candidates: [claude_ai_Atlassian, claude_ai_Atlassian_Rovo]
+    tools: [search, fetch, getTeamworkGraphContext, getTeamworkGraphObject, getAccessibleAtlassianResources, atlassianUserInfo]
+    forbidden: [addTeamworkGraphContext]
+params: {}

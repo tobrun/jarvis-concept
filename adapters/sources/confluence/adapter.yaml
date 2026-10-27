@@ -1,0 +1,17 @@
+name: confluence
+title: Confluence
+description: Pages in watched spaces and pages that mention the principal, with version history.
+order: 60
+id: "confluence:<page>"
+match: parts
+capture: mcp
+servers:
+  atlassian:
+    candidates: [claude_ai_Atlassian, claude_ai_Atlassian_Rovo]
+    tools: [getConfluencePage, searchConfluenceUsingCql, getPagesInConfluenceSpace, getConfluencePageDescendants, getConfluencePageFooterComments, getConfluencePageInlineComments, getConfluenceCommentChildren, getConfluenceSpaces]
+    forbidden: [createConfluencePage, updateConfluencePage, createConfluenceFooterComment, createConfluenceInlineComment]
+params:
+  spaces:
+    type: list
+    description: Confluence space keys to watch.
+    example: [PLAT]

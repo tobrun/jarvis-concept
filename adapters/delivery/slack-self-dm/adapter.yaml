@@ -1,0 +1,18 @@
+# Posts the report to the principal's own Slack DM with themselves, and nowhere else.
+name: slack-self-dm
+title: Slack self-DM
+description: The report and one thread reply per actionable item in the principal's Slack DM with themselves.
+server:
+  candidates: [claude_ai_Slack, plugin_enterprise-search_slack]
+  tool: slack_send_message
+# The only parameters the guard lets through; any other key is denied.
+keys: [channel_id, message, thread_ts]
+target_key: channel_id
+target_shape: scalar
+message_key: message
+thread_key: thread_ts
+reactions: true
+target:
+  description: Your own Slack user id (the Slack connector opens your self-DM when it is the channel id).
+  example: U0123456789
+place: "{{principal}}'s Slack self-DM"

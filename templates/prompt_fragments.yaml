@@ -1,0 +1,64 @@
+# Prose fragments of JARVIS.md that depend on the profile. scripts/bootstrap.py picks one variant per key
+# and fills its {{placeholders}}; JARVIS.md.tmpl places the result. Keep one sentence per line.
+
+mission:
+  work: "{{principal}}: {{role}}. You cover work only."
+  personal: "{{principal}}: {{role}}. You cover {{short}}'s personal life admin, not a job."
+  mixed: "{{principal}}: {{role}}. You cover both work and personal life, and keep the two apart in every report."
+
+personal_scope_exception:
+  work: ""
+  personal: " other than {{short}}'s own, which you track only as far as {{short}} asks"
+  mixed: " other than {{short}}'s own, which you track only as far as {{short}} asks"
+
+goal_documents: >-
+  Documents {{short}} wrote for other people: {{documents}}.
+  These are {{short}}'s goals in {{short}}'s own words to an audience that will hold {{them}} to account.
+default_goal_documents: plans, proposals, and charters
+
+opinions:
+  set: "- Judgment: read `{{opinions}}` once per run. Apply it when ranking and when drafting."
+  unset: "- Judgment: no opinions file is configured; `OWNER.md` and {{short}}'s corrections are the guide."
+voice:
+  set: "- Voice: `{{voice}}` is the digest. The source is {{short}}'s own writing in `raw/`. Section 11 says how to use both."
+  unset: "- Voice: no voice file is configured. The source is {{short}}'s own writing in `raw/`. Section 11 says how to use it."
+voice_floor:
+  set: "`{{voice}}` sets the floor. {{short}}'s actual messages to that person set the register."
+  unset: "{{short}}'s actual messages to that person set the register."
+
+index:
+  sqlite: SQLite in `state/index.sqlite`, git-ignored and rebuildable.
+  postgres: Postgres with pgvector, connection in `config/db.env`.
+
+# Delivery: `posts` when the delivery adapter sends a message, `file` when the report file is the delivery.
+delivery:
+  posts:
+    outbound_rule: >-
+      Never send a message, email, reply, reaction, or post under {{short}}'s identity,
+      with one exception: the report and its replies in {{place}}.
+    guard_post_clause: "{{place}} as the only delivery target, with only its allowed parameters"
+    guard_report_clause: >-
+      A top-level report is delivered only when it passes `scripts/report_check.py`,
+      and never while `state/ooo.json` covers now or on a holiday.
+    alerts_enforcement: the guard refuses the delivery otherwise.
+    deliver_step: >-
+      Deliver the report to {{place}} unless the plan says `holiday` or `state/ooo.json` covers now;
+      the guard refuses it otherwise.
+      Record what was sent with `uv run scripts/append.py report_messages` so replies and reactions map back and the alerts clear.
+    feedback_step: >-
+      Read any new replies{{and_reactions}} on past reports in {{place}} since last run.
+      Apply snoozes (`uv run scripts/loops.py snooze`), corrections, and promotions.
+    snooze_line_reactions: "Snooze: a reaction on the item's reply with the snooze reaction in `config/reactions.md` sets `snoozed_until`."
+    snooze_line: "Snooze: {{short}} snoozes an item by replying `snooze <raw_id>` to the report, or in an interactive session."
+    correction_channel_line: A reply to a report in {{place}} is read by the next run and handled the same way.
+  file:
+    outbound_rule: Never send a message, email, reply, reaction, or post under {{short}}'s identity. You have no delivery tool at all.
+    guard_post_clause: no delivery tool in any mode
+    guard_report_clause: The report is the file; `scripts/run.py` checks it with `scripts/report_check.py` after the session.
+    alerts_enforcement: "`scripts/run.py` keeps them open otherwise."
+    deliver_step: Do not send the report anywhere. It is the file in `reports/`; `scripts/run.py` checks it after the session.
+    feedback_step: >-
+      Read the daily notes of interactive sessions since last run for snoozes, corrections, and promotions,
+      and apply them (`uv run scripts/loops.py snooze`).
+    snooze_line: "Snooze: {{short}} snoozes an item in an interactive session."
+    correction_channel_line: Corrections arrive only in interactive sessions.

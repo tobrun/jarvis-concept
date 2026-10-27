@@ -1,0 +1,26 @@
+name: google-drive
+title: Google Drive
+description: Drive activity (shares, comments, edits) and the content of Docs, Sheets, and Slides.
+order: 70
+id: "drive:<file>"
+match: parts
+capture: mcp
+source: drive
+servers:
+  drive:
+    candidates: [claude_ai_Google_Drive]
+    tools: [search_files, get_file_metadata, read_file_content, list_recent_files, download_file_content, get_file_permissions]
+    forbidden: [create_file, update_file, copy_file, share_file, trash_file]
+  docs:
+    candidates: [claude_ai_Google_Docs]
+    tools: [read_doc]
+    forbidden: [update_doc]
+  sheets:
+    candidates: [claude_ai_Google_Sheets]
+    tools: [get_values, get_spreadsheet]
+    forbidden: [append_values, batch_clear_values, copy_sheet_to_another_spreadsheet, insert_dimension, update_formulas, update_spreadsheet, update_values]
+  slides:
+    candidates: [claude_ai_Google_Slides]
+    tools: [read_presentation, read_slide_page]
+    forbidden: [update_presentation]
+params: {}

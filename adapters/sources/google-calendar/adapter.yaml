@@ -1,0 +1,14 @@
+name: google-calendar
+title: Google Calendar
+description: Events with attendee responses, descriptions, attachments, and recurrence. The calendar of record for meetings and out of office.
+order: 10
+id: "calendar:<event>"
+match: parts
+capture: mcp
+source: calendar
+servers:
+  calendar:
+    candidates: [claude_ai_Google_Calendar]
+    tools: [list_events, get_event, search_events, list_calendars]
+    forbidden: [create_event, update_event, delete_event, respond_to_event, suggest_time]
+params: {}

@@ -1,0 +1,17 @@
+.dev/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Jarvis runtime: raw source records and frozen golden weeks stay local and out of history (D-raw-in-git);
+# locks, scratch space, and session logs are per machine.
+raw/
+eval/golden/
+state/tmp/
+state/logs/
+state/run.lock
+state/runs.lock
+state/scheduler-*.log
+state/index.sqlite

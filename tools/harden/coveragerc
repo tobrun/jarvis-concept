@@ -1,0 +1,15 @@
+# Coverage for the gauntlet's complexity check (tools/harden/complexity.py).
+# The harness runs most scripts as subprocesses (hooks, run.py, replay.py), so subprocess measurement is on.
+[run]
+include = */scripts/*.py
+branch = true
+parallel = true
+patch = subprocess
+
+# Tests run the scripts from temp repo copies (pytest tmp dirs, replay copies); count them as the repo's.
+[paths]
+source =
+    scripts/
+    */jarvis/scripts/
+    */jarvis-replay-*/scripts/
+    */jarvis-guard-*/scripts/

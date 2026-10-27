@@ -1,0 +1,18 @@
+# Mails the report to the principal's own address, and to no one else.
+name: gmail-to-self
+title: Email to self (Gmail)
+description: The report as a plain-text email to the principal's own address; replies in the thread carry corrections.
+server:
+  candidates: [claude_ai_Gmail]
+  tool: send_message
+keys: [to, subject, body, replyThreadId]
+target_key: to
+target_shape: list
+message_key: body
+thread_key: replyThreadId
+reactions: false
+target:
+  description: The address the report goes to; must be your own.
+  example: you@example.com
+  default: principal_email
+place: "an email to {{principal}}'s own address"
